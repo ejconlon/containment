@@ -1,0 +1,23 @@
+---
+- hosts: all
+  tasks:
+    - name: install luigi
+      pip:
+        name: luigi
+        executable: pip-3.6
+    - name: make luigi config dir
+      file:
+        path: /etc/luigi
+        state: directory
+    - name: make luigi run dir
+      file:
+        path: /var/opt/luigi
+        state: directory
+    - name: copy luigi config
+      copy:
+        src: files/client.cfg
+        dest: /etc/luigi/client.cfg
+    - name: add luigi to supervisor config
+      copy:
+        src: files/luigi.conf
+        dest: /etc/supervisor/programs/luigi.conf

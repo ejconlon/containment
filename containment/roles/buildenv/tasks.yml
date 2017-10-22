@@ -1,0 +1,15 @@
+---
+- hosts: all
+  tasks:
+    - name: install dev packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - gcc
+        - gcc-c++
+        - python36
+        - python36-devel
+        - python36-pip
+        - unzip
+        - zip
