@@ -8,10 +8,10 @@ set -euxo pipefail
 : "${IMAGE?}"
 : "${ROLES?}"
 
-CWD="$(pwd)"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-docker run -v ${CWD}:/repo -e ROLES="${ROLES}" ${ORG}/base \
-  bash /repo/containment/util/playbook.sh
+docker run -v ${DIR}/..:/context -e ROLES="${ROLES}" ${ORG}/base \
+  bash /context/util/playbook.sh
 
 # Gets last executed container. Not safe on busy systems...
 CONTAINER_ID="$(docker ps -lq)"
