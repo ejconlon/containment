@@ -1,0 +1,24 @@
+---
+- hosts: all
+  tasks:
+    - name: make healthz dirs
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - /opt/healthz
+        - /var/opt/healthz
+    - name: copy healthz script
+      copy:
+        src: files/healthz.py
+        dest: /opt/healthz/healthz.py
+    - name: copy healthz init script
+      copy:
+        src: files/healthz
+        dest: /etc/init.d/healthz
+        mode: 755
+    - name: start healthz
+      service:
+        name: healthz
+        enabled: yes
+        state: started

@@ -1,0 +1,19 @@
+---
+- hosts: all
+  tasks:
+    - name: daemonize supervisor
+      ini_file:
+        path: /etc/supervisor/supervisord.conf
+        section: supervisord
+        option: nodaemon
+        value: false
+    - name: copy supervisor init script
+      copy:
+        src: files/supervisor
+        dest: /etc/init.d/supervisor
+        mode: 755
+    - name: start supervisor
+      service:
+        name: supervisor
+        enabled: yes
+        state: started
