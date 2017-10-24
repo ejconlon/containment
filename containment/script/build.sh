@@ -6,7 +6,8 @@ set -euxo pipefail
 
 : "${ORG?}"
 : "${IMAGE?}"
+: "${TYPE?}"
 
 CONTEXT="containment"
-DOCKERFILE="${CONTEXT}/images/${IMAGE}/Dockerfile"
+DOCKERFILE="${CONTEXT}/${TYPE}/${IMAGE}/Dockerfile"
 docker build --build-arg ORG=${ORG} -t ${ORG}/${IMAGE} -f ${DOCKERFILE} ${CONTEXT}

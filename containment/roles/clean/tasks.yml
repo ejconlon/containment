@@ -7,10 +7,11 @@
         state: absent
       with_items:
         - python27-pip
-    - name: remove caches
+    - name: remove junk
       file:
         name: "{{ item }}"
         state: absent
       with_items:
         - /root/.cache
         - /var/cache
+        - /usr/share/doc

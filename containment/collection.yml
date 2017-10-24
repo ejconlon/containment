@@ -1,0 +1,34 @@
+docker:
+  post_roles:
+    - clean
+
+ec2:
+  pre_roles:
+    - healthz
+
+  post_roles:
+    - superinit
+
+images:
+  base:
+    imports: amazonlinux:latest
+
+  buildenv:
+    extends: base
+    roles:
+      - buildenv
+
+  supervisor:
+    extends: base
+    roles:
+      - supervisor
+    ports:
+      supervisor: 9001
+    command: supervisord -c /etc/supervisor/supervisord.conf
+
+  luigi:
+    extends: supervisor
+    roles:
+      - luigi
+    ports:
+      luigi: 8990
