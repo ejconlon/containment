@@ -6,11 +6,14 @@ set -euxo pipefail
 
 : "${ORG?}"
 : "${IMAGE?}"
+: "${BASE?}"
 : "${ROLES?}"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-docker run -v ${DIR}/..:/context -e ROLES="${ROLES}" ${ORG}/base \
+CONTEXT="${DIR}/.."
+
+docker run -v ${CONTEXT}:/context -e ROLES="${ROLES}" ${ORG}/${BASE} \
   bash /context/util/playbook.sh
 
 # Gets last executed container. Not safe on busy systems...

@@ -25,6 +25,6 @@ pip-3.6 install ansible
 
 echo "configuring" >> $STATE
 
-ROLES="healthz supervisor _ROLES_ superinit" bash /context/util/playbook.sh
+ROLES="_ROLES_" bash /context/util/playbook.sh
 
 echo "ready" >> $STATE

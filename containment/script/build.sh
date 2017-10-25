@@ -8,6 +8,10 @@ set -euxo pipefail
 : "${IMAGE?}"
 : "${TYPE?}"
 
-CONTEXT="containment"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+CONTEXT="${DIR}/.."
+
 DOCKERFILE="${CONTEXT}/${TYPE}/${IMAGE}/Dockerfile"
+
 docker build --build-arg ORG=${ORG} -t ${ORG}/${IMAGE} -f ${DOCKERFILE} ${CONTEXT}

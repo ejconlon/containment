@@ -6,6 +6,7 @@ setup(
     description='it builds containers',
     packages=find_packages(exclude=['tests']),
     install_requires=[
+        'boto3',
         'docker',
         'pyyaml'
     ]

@@ -6,6 +6,9 @@ ec2:
   pre_roles:
     - healthz
 
+  require_roles:
+    - supervisor
+
   post_roles:
     - superinit
 
@@ -13,13 +16,24 @@ images:
   base:
     imports: amazonlinux:latest
 
+  hardened:
+    extends: base
+    roles:
+      - hardened
+
+  lynis:
+    extends: hardened
+    roles:
+      - interactive
+      - lynis
+
   buildenv:
     extends: base
     roles:
       - buildenv
 
   supervisor:
-    extends: base
+    extends: hardened
     roles:
       - supervisor
     ports:

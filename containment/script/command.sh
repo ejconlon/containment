@@ -7,7 +7,9 @@ set -euxo pipefail
 : "${ORG?}"
 : "${IMAGE?}"
 
-CWD="$(pwd)"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+CONTEXT="${DIR}/.."
 
 if [[ $# -eq 0 ]]; then
   COMMAND="bash"
@@ -16,4 +18,4 @@ else
   COMMAND="$@"
 fi
 
-docker run -it -v ${CWD}/..:/context -P ${ORG}/${IMAGE} ${COMMAND}
+docker run -it -v ${CONTEXT}:/context -P ${ORG}/${IMAGE} ${COMMAND}
