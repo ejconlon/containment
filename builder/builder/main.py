@@ -2,6 +2,7 @@ import argparse
 import boto3
 from collections import OrderedDict
 import docker
+import json
 import os
 import shutil
 import yaml
@@ -52,6 +53,8 @@ class Builder:
             print('validating attributes for {}'.format(name))
             if 'imports' in body:
                 assert 'extends' not in body
+                assert 'roles' not in body
+                assert 'vars' not in body
                 path = os.path.join(self.containment, 'custom', name, 'Dockerfile')
                 assert os.path.isfile(path)
                 with open(path, 'r') as f:
@@ -63,6 +66,9 @@ class Builder:
                 for role in body['roles']:
                     path = os.path.join(self.containment, 'roles', role, 'tasks.yml')
                     assert os.path.isfile(path)
+                if 'vars' in body:
+                    for role in body['vars'].keys():
+                        assert role in body['roles']
         for (name, body) in images.items():
             print('validating order for {}'.format(name))
             (b, es) = self.build_order(name)
@@ -109,7 +115,11 @@ class Builder:
             for role in roles:
                 copy = 'COPY roles/{0} /context/roles/{0}'.format(role)
                 dockerfile.append(copy)
-            run = 'RUN ROLES="{}" /context/util/playbook.sh && rm -rf /context'.format(' '.join(roles))
+            if 'vars' in body:
+                varz = body['vars']
+            else:
+                varz = {}
+            run = "RUN ROLES='{}' VARS='{}' /context/util/playbook.sh && rm -rf /context".format(' '.join(roles), json.dumps(varz))
             dockerfile.append(run)
             if 'ports' in body:
                 for port in body['ports'].values():
@@ -153,6 +163,7 @@ class Builder:
             else:
                 loc = 'gen'
             dockerfile = os.path.join(loc, image_name, 'Dockerfile')
+            print('client build {}'.format(image_name))
             client.images.build(
                 path=self.containment,
                 dockerfile=dockerfile,

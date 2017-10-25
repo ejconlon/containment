@@ -21,11 +21,14 @@ images:
     roles:
       - hardened
 
-  lynis:
+  lynis-exp:
     extends: hardened
     roles:
       - interactive
       - lynis
+    vars:
+      lynis:
+        dummy: hi
 
   buildenv:
     extends: base
